@@ -1,0 +1,148 @@
+
+.sidebar {
+  width: 280px;
+  background: #000000;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  color: #b3b3b3;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  margin-bottom: 2rem;
+}
+
+.spotify-logo {
+  font-size: 2rem;
+  color: #1db954;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  margin-bottom: 2rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  color: #b3b3b3;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.nav-item:hover {
+  color: white;
+}
+
+.nav-item.active {
+  color: white;
+}
+
+.nav-icon {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.library-section {
+  flex: 1;
+  background: #121212;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.library-header h3 {
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.add-btn {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.add-btn:hover {
+  color: white;
+}
+
+.playlist-item, .podcast-item {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.playlist-info h4, .podcast-info h4 {
+  color: white;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.playlist-info p, .podcast-info p {
+  color: #b3b3b3;
+  font-size: 0.8rem;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.create-playlist-btn, .explore-podcasts-btn {
+  background: none;
+  border: 1px solid #b3b3b3;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.create-playlist-btn:hover, .explore-podcasts-btn:hover {
+  transform: scale(1.04);
+  border-color: white;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.language-selector {
+  color: #b3b3b3;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.language-selector:hover {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+}
