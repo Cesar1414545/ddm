@@ -13,8 +13,8 @@ const MainContent = () => {
           <button className="nav-btn">❯</button>
         </div>
         <div className="header-actions">
-          <button className="premium-btn">Premium</button>
-          <button className="support-btn">Suporte</button>
+          <button className="premium-btn" onClick={() => alert('Redirecionando para página Premium...')}>Premium</button>
+          <button className="support-btn" onClick={() => alert('Central de Ajuda: Entre em contato conosco!')}>Suporte</button>
           <button className="download-btn">Baixar</button>
           <button className="profile-btn">👤</button>
           <button className="install-btn">📱 Instalar aplicativo</button>

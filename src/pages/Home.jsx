@@ -1,184 +1,253 @@
-
-import React from 'react'
+import React, { useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../App'
 import MusicCarousel from '../components/MusicCarousel'
 import ArtistCarousel from '../components/ArtistCarousel'
+import Premium from './Premium'
+import Signup from './Signup'
+import Login from './Login'
+import Support from './Support'
+import Download from './Download'
+import './Home.css'
 
 const Home = () => {
+  const { user } = useContext(AuthContext)
+  const [activeModal, setActiveModal] = useState(null)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
+
+  const showModal = (modalType) => {
+    setActiveModal(modalType)
+  }
+
+  const closeModal = () => {
+    setActiveModal(null)
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const handlePremiumClick = () => {
+    if (user) {
+      showModal('premium')
+    } else {
+      showModal('login')
+    }
+  }
+
+  const handleSupportClick = () => {
+    showModal('support')
+  }
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
+    }
+  }
+
+  const handleSearchClick = () => {
+    navigate('/search')
+  }
+
   return (
-    <div style={{ 
-      padding: '2rem 3rem', 
-      background: 'linear-gradient(180deg, #1f1f1f 0%, #121212 100%)', 
-      minHeight: 'calc(100vh - 70px)', 
-      color: 'white'
-    }}>
-      {/* Header com navegação */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '2rem'
-      }}>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button style={{
-            background: 'rgba(0, 0, 0, 0.7)',
-            border: 'none',
-            color: 'white',
-            width: '35px',
-            height: '35px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            fontSize: '1.2rem'
-          }}>❮</button>
-          <button style={{
-            background: 'rgba(0, 0, 0, 0.7)',
-            border: 'none',
-            color: 'white',
-            width: '35px',
-            height: '35px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            fontSize: '1.2rem'
-          }}>❯</button>
+    <div className="home">
+      {/* Main Header */}
+      <header className="main-header">
+        <div className="nav-controls">
+          <button className="nav-btn">◀</button>
+          <button className="nav-btn">▶</button>
         </div>
-        
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button style={{
-            background: 'transparent',
-            border: '1px solid #727272',
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}>Premium</button>
-          <button style={{
-            background: 'transparent',
-            border: '1px solid #727272',
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}>Suporte</button>
-          <button style={{
-            background: 'transparent',
-            border: '1px solid #727272',
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}>Baixar</button>
-          <button style={{
-            background: '#1db954',
-            border: 'none',
-            color: 'white',
-            padding: '8px 24px',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: '600'
-          }}>Inscrever-se</button>
-          <button style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'white',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}>Entrar</button>
+
+        <div className="search-container">
+          <form onSubmit={handleSearchSubmit} className="search-bar" onClick={handleSearchClick}>
+            <span className="search-icon">🔍</span>
+            <input 
+              type="text" 
+              placeholder="O que você quer ouvir?" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </form>
         </div>
+
+        <div className="header-actions">
+          {/* Desktop Actions */}
+          <div className="desktop-actions">
+            <button 
+              className="premium-btn"
+              onClick={handlePremiumClick}
+            >
+              Explorar Premium
+            </button>
+            <button 
+              className="support-btn"
+              onClick={handleSupportClick}
+            >
+              Suporte
+            </button>
+            <button 
+              className="download-btn"
+              onClick={() => showModal('download')}
+            >
+              Baixar aplicativo
+            </button>
+
+            {user ? (
+              <div className="user-profile">
+                <button className="profile-btn">👤</button>
+                <span className="user-name">{user.name}</span>
+              </div>
+            ) : (
+              <>
+                <button 
+                  className="login-btn"
+                  onClick={() => showModal('login')}
+                >
+                  Entrar
+                </button>
+                <button 
+                  className="signup-btn"
+                  onClick={() => showModal('signup')}
+                >
+                  Inscrever-se
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu */}
+          <div className="mobile-menu-container">
+            <button 
+              className="hamburger-btn"
+              onClick={toggleMobileMenu}
+            >
+              ☰
+            </button>
+
+            {isMobileMenuOpen && (
+              <div className="mobile-menu">
+                <button 
+                  className="premium-btn"
+                  onClick={handlePremiumClick}
+                >
+                  Explorar Premium
+                </button>
+                <button 
+                  className="support-btn"
+                  onClick={handleSupportClick}
+                >
+                  Suporte
+                </button>
+                <button 
+                  className="download-btn"
+                  onClick={() => showModal('download')}
+                >
+                  Baixar aplicativo
+                </button>
+
+                {user ? (
+                  <div className="mobile-user-profile">
+                    <button className="profile-btn">👤</button>
+                    <span className="user-name">{user.name}</span>
+                  </div>
+                ) : (
+                  <>
+                    <button 
+                      className="mobile-login"
+                      onClick={() => showModal('login')}
+                    >
+                      Entrar
+                    </button>
+                    <button 
+                      className="mobile-signup"
+                      onClick={() => showModal('signup')}
+                    >
+                      Inscrever-se
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Filter Tabs */}
+      <div className="mobile-filter-tabs">
+        <button className="filter-tab active">Tudo</button>
+        <button className="filter-tab">Músicas</button>
+        <button className="filter-tab">Artistas</button>
+        <button className="filter-tab">Álbuns</button>
+        <button className="filter-tab">Playlists</button>
+        <button className="filter-tab">Podcasts</button>
+        <button className="filter-tab">Audiolivros</button>
+        <button className="filter-tab">Rock</button>
+        <button className="filter-tab">Pop</button>
+        <button className="filter-tab">Sertanejo</button>
+        <button className="filter-tab">Eletrônica</button>
+        <button className="filter-tab">Hip Hop</button>
+        <button className="filter-tab">MPB</button>
+        <button className="filter-tab">Jazz</button>
+        <button className="filter-tab">Clássica</button>
       </div>
 
-      {/* Seção Músicas em alta */}
-      <section style={{ marginBottom: '3rem' }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1.5rem'
-        }}>
-          <h2 style={{
-            fontSize: '1.8rem',
-            fontWeight: '700',
-            margin: 0,
-            color: 'white'
-          }}>Músicas em alta</h2>
-          <button style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#b3b3b3',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            textDecoration: 'underline'
-          }}>Mostrar tudo</button>
+      {/* Main Content */}
+      <div className="home-content">
+          <MusicCarousel title="🎸 Rock Classics" genre="rock" />
+          <MusicCarousel title="🎤 Pop Hits" genre="pop" />
+          <MusicCarousel title="🎵 Hip Hop" genre="hip_hop" />
+          <ArtistCarousel title="Artistas Populares" />
+          <MusicCarousel title="🎧 Eletrônica" genre="eletronica" />
+          <MusicCarousel title="🤠 Sertanejo" genre="sertanejo" />
+          <MusicCarousel title="🌴 Reggae" genre="reggae" />
+          <MusicCarousel title="🎺 Jazz" genre="jazz" />
+          <MusicCarousel title="🕺 Funk" genre="funk" />
         </div>
-        <MusicCarousel />
-      </section>
 
-      {/* Seção Artistas populares */}
-      <section style={{ marginBottom: '3rem' }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1.5rem'
-        }}>
-          <h2 style={{
-            fontSize: '1.8rem',
-            fontWeight: '700',
-            margin: 0,
-            color: 'white'
-          }}>Artistas populares</h2>
-          <button style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#b3b3b3',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            textDecoration: 'underline'
-          }}>Mostrar tudo</button>
+      {/* Modals */}
+      {activeModal === 'premium' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <Premium onClose={closeModal} />
+          </div>
         </div>
-        <ArtistCarousel />
-      </section>
+      )}
 
-      {/* Seção Singles e álbuns */}
-      <section style={{ marginBottom: '3rem' }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1.5rem'
-        }}>
-          <h2 style={{
-            fontSize: '1.8rem',
-            fontWeight: '700',
-            margin: 0,
-            color: 'white'
-          }}>Singles e álbuns que todo mundo gosta</h2>
-          <button style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#b3b3b3',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            textDecoration: 'underline'
-          }}>Mostrar tudo</button>
+      {activeModal === 'signup' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <Signup onClose={closeModal} />
+          </div>
         </div>
-        <MusicCarousel />
-      </section>
+      )}
 
-      {/* Rodapé */}
-      <div style={{
-        textAlign: 'center',
-        marginTop: '4rem',
-        padding: '2rem 0',
-        borderTop: '1px solid #282828',
-        color: '#b3b3b3',
-        fontSize: '0.9rem'
-      }}>
-        <p>🎵 Clone do Spotify • Desenvolvido com React</p>
-      </div>
+      {activeModal === 'login' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <Login onClose={closeModal} />
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'support' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <Support onClose={closeModal} />
+          </div>
+        </div>
+      )}
+
+      {activeModal === 'download' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <Download onClose={closeModal} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

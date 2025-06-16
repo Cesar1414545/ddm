@@ -19,18 +19,60 @@ const LyricsModal = ({ isOpen, onClose, track }) => {
     setLyrics('')
 
     try {
-      // Usando uma API de letras (Lyrics.ovh é gratuita)
-      const response = await fetch(`https://api.lyrics.ovh/v1/${track.artist.name}/${track.title}`)
-      const data = await response.json()
-      
-      if (data.lyrics) {
-        setLyrics(data.lyrics)
-      } else {
-        setError('Letra não encontrada para esta música.')
+      // Tentativa com múltiplas APIs
+      const apis = [
+        `https://api.lyrics.ovh/v1/${encodeURIComponent(track.artist.name)}/${encodeURIComponent(track.title)}`,
+        `https://some-random-api.ml/lyrics?title=${encodeURIComponent(track.title)}&artist=${encodeURIComponent(track.artist.name)}`
+      ]
+
+      let lyricsFound = false
+
+      for (const apiUrl of apis) {
+        try {
+          const response = await fetch(apiUrl)
+          const data = await response.json()
+          
+          if (data.lyrics) {
+            setLyrics(data.lyrics)
+            lyricsFound = true
+            break
+          }
+        } catch (apiErr) {
+          console.log('API falhou:', apiErr)
+          continue
+        }
+      }
+
+      if (!lyricsFound) {
+        // Letra simulada se nenhuma API funcionar
+        setLyrics(`🎵 Letra para "${track.title}" por ${track.artist.name} 🎵
+
+Infelizmente, não conseguimos carregar a letra original desta música no momento.
+
+Isto pode acontecer devido a:
+• Limitações da API de letras
+• Música muito nova ou rara
+• Problemas de conectividade
+
+Mas você pode continuar aproveitando a música! 
+Use os controles do player para pausar, pular ou repetir.
+
+🎶 Continue curtindo sua música! 🎶`)
       }
     } catch (err) {
       console.error('Erro ao buscar letra:', err)
-      setError('Erro ao carregar a letra. Tente novamente.')
+      setLyrics(`🎵 "${track.title}" - ${track.artist.name} 🎵
+
+Oops! Não conseguimos carregar a letra desta música.
+
+Mas isso não vai parar a música! 
+Continue usando os controles do player para:
+• ⏸️ Pausar/Play
+• ⏮️ Música anterior  
+• ⏭️ Próxima música
+• 🔄 Repetir
+
+🎶 A música continua... 🎶`)
     } finally {
       setIsLoading(false)
     }
@@ -57,15 +99,6 @@ const LyricsModal = ({ isOpen, onClose, track }) => {
             <div className="loading">
               <div className="spinner"></div>
               <p>Carregando letra...</p>
-            </div>
-          )}
-          
-          {error && (
-            <div className="error">
-              <p>{error}</p>
-              <button onClick={fetchLyrics} className="retry-button">
-                Tentar Novamente
-              </button>
             </div>
           )}
           

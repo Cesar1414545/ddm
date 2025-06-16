@@ -14,6 +14,7 @@ body {
   color: #ffffff;
   line-height: 1.6;
   overflow-x: hidden;
+  padding-bottom: 72px;
 }
 
 #root {
@@ -27,12 +28,12 @@ html {
 
 /* Custom selection colors */
 ::selection {
-  background: rgba(29, 185, 84, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
 }
 
 ::-moz-selection {
-  background: rgba(29, 185, 84, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
 }
 
@@ -97,5 +98,5 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1db954;
+  background: #727272;
 }
